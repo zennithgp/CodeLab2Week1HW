@@ -39,7 +39,7 @@ public class PlayerPhysicsMoveScript : MonoBehaviour {
 		//we'll call a function which moves according to which key is pressed
 		//Param1 = KeyCode, Param2 = the appropriate Vector3
 
-		MoveByKey (moveUp, new Vector3 (0, timeAdjustedSpeed, 0));
+		MoveByKey (moveUp, new Vector3 (0, 10*timeAdjustedSpeed, 0));
 		MoveByKey (moveDown, new Vector3 (0, -timeAdjustedSpeed, 0));
 		MoveByKey (moveLeft, new Vector3 (-timeAdjustedSpeed, 0, 0));
 		MoveByKey (moveRight, new Vector3 (timeAdjustedSpeed, 0, 0));
