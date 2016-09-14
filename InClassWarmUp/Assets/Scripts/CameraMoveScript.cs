@@ -7,6 +7,8 @@ public class CameraMoveScript : MonoBehaviour {
 	//this is still public, friend. Don't forget this.
 	public Transform playerTransform;
 
+	public float cameraZ;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -24,7 +26,7 @@ public class CameraMoveScript : MonoBehaviour {
 //			transform.position = newPosition;
 //		} else {
 			Vector3 newPosition = 0.4f * (transform.position + playerTransform.position);
-			newPosition.z = -10f;
+			newPosition.z = cameraZ;
 			transform.position = newPosition;
 //		}
 //
