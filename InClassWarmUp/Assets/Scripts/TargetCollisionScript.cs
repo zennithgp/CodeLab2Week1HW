@@ -11,31 +11,47 @@ public class TargetCollisionScript : MonoBehaviour {
 	public AudioSource successMusic;
 
 	//create a timer to check how long this is colliding with the player
-	float collisionTimer;
+	float collisionTimer = 0f;
 	//and a float so we can change the desired collision time in the inspector
-	public float collisionTimeLimit;
+	public float collisionTimeLimit = 3f;
+	//we'll use this numbers to track how far along you are to succeeding
+	float successPercentage;
 
 	// Use this for initialization
 	void Start () {
 	
 		player = GameObject.Find ("Player");
 		collidingMusic = GetComponent<AudioSource> ();
-		successMusic = player.GetComponent<Audiosource> ();
+		successMusic = player.GetComponent<AudioSource> ();
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+		successPercentage = (collisionTimer / collisionTimeLimit);
+
 	}
 
 	void OnCollisionEnter(Collision collider){
-		//if you're colliding, but not for the desired time limit...
+		//if you're colliding, but not yet at the desired time limit...
 		if (collider.gameObject.name == "Player" && (collisionTimer < collisionTimeLimit)) {
+			collisionTimer += Time.deltaTime;
 			//play and loop the colliding sfx
-			collidingMusic.Play ();
-			collidingMusic.loop (true);
+			if (collidingMusic.isPlaying == false) {
+				collidingMusic.Play ();
+				collidingMusic.loop = true;
+			}
 		}
+		if (collider.gameObject.name == "Player" && (collisionTimer >= collisionTimeLimit)) {
+			collidingMusic.Stop ();
+			successMusic.Play ();
+			MoveThisTarget ();
+		}
+	}
+
+	void MoveThisTarget(){
+
 	}
 
 	void CheckIfCollidingWithPlayer(){
@@ -50,16 +66,3 @@ public class TargetCollisionScript : MonoBehaviour {
 		//TODO: Move this to a random spot in the box that's not colliding with the player
 	}
 }
-
-
-
-
-void OnCollisionEnter(Collision collider){
-	if (collider.gameObject.name == "Player" && touchedTheEnd == false) {
-		levelMusic.Stop ();
-		winMusic.Play();
-		touchedTheEnd = true;
-		Debug.Log ("You touched the end?");
-		gameManagerScript.CheckHighScore ();
-		Invoke ("Restart", 4f);
-	}
