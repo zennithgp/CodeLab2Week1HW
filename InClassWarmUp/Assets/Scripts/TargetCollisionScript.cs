@@ -18,6 +18,7 @@ public class TargetCollisionScript : MonoBehaviour {
 	public float collisionTimeLimit = 3f;
 	//we'll use this numbers to track how far along you are to succeeding
 	float successPercentage;
+	bool overlappingWithPlayer = false;
 
 	// Use this for initialization
 	void Start () {
@@ -39,11 +40,21 @@ public class TargetCollisionScript : MonoBehaviour {
 		newColor.r = successPercentage;
 		sprite.color = newColor;
 
+		//if you're not colliding with the player, decrease thge collision timer
+		if (overlappingWithPlayer == false) {
+			if (collisionTimer > 0) {
+				collisionTimer -= Time.deltaTime;
+			} else {
+				collisionTimer = 0;
+			}
+		}
+
 	}
 
-	void OnCollisionEnter(Collision collider){
+	void OnTriggerStay(Collider collider){
 		//if you're colliding, but not yet at the desired time limit...
 		if (collider.gameObject.name == "Player" && (collisionTimer < collisionTimeLimit)) {
+			overlappingWithPlayer = true;
 			collisionTimer += Time.deltaTime;
 			//play and loop the colliding sfx
 			if (collidingMusic.isPlaying == false) {
@@ -56,11 +67,22 @@ public class TargetCollisionScript : MonoBehaviour {
 			collidingMusic.Stop ();
 			successMusic.Play ();
 			MoveThisTarget ();
+			Debug.Log ("Timer met!");
+			overlappingWithPlayer = false;
 		}
 	}
 
-	void MoveThisTarget(){
+	void OnTriggerExit(Collider collider){
+		collidingMusic.loop = false;
+		overlappingWithPlayer = false;
 
+	}
+
+	void MoveThisTarget(){
+		float tempX = Random.Range (-14f, 14f);
+		float tempy = Random.Range (-14f, 14f);
+		new Vector3 tempPos = (tempX, tempy, 0f);
+		transform.position = tempPos;
 	}
 
 	void CheckIfCollidingWithPlayer(){
