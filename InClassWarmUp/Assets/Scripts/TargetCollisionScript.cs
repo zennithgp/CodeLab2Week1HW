@@ -9,6 +9,8 @@ public class TargetCollisionScript : MonoBehaviour {
 	public GameObject player;
 	public AudioSource collidingMusic;
 	public AudioSource successMusic;
+	SpriteRenderer spriteRenderer;
+	Sprite thisSprite;
 
 	//create a timer to check how long this is colliding with the player
 	float collisionTimer = 0f;
@@ -23,6 +25,7 @@ public class TargetCollisionScript : MonoBehaviour {
 		player = GameObject.Find ("Player");
 		collidingMusic = GetComponent<AudioSource> ();
 		successMusic = player.GetComponent<AudioSource> ();
+
 
 	}
 	
