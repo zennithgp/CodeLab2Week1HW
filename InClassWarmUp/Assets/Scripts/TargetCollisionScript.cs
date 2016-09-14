@@ -28,7 +28,7 @@ public class TargetCollisionScript : MonoBehaviour {
 		successMusic = player.GetComponent<AudioSource> ();
 		sprite = GetComponent<SpriteRenderer> ();
 		originalColor = sprite.color;
-
+		sprite.color = Color.green;
 
 	}
 	
@@ -37,8 +37,20 @@ public class TargetCollisionScript : MonoBehaviour {
 
 		successPercentage = (collisionTimer / collisionTimeLimit);
 		Color newColor = sprite.color;
-		newColor.r = successPercentage;
-		sprite.color = newColor;
+//		Color.Lerp(
+//		newColor.r = successPercentage*255;
+//		newColor.g = 255 / successPercentage;
+//		newColor.b = 255 / successPercentage;
+//		newColor.a = successPercentage*255;
+//		sprite.color = newColor;
+//		Debug.Log (sprite.color);
+		Color tempColor = sprite.color;
+		if (overlappingWithPlayer) {
+			tempColor = Color.Lerp (sprite.color, Color.red, 0.01f);
+		} else {
+			tempColor = Color.Lerp (sprite.color, Color.green, 0.01f);
+		}
+		sprite.color = tempColor;
 
 		//if you're not colliding with the player, decrease thge collision timer
 		if (overlappingWithPlayer == false) {
@@ -46,6 +58,7 @@ public class TargetCollisionScript : MonoBehaviour {
 				collisionTimer -= Time.deltaTime;
 			} else {
 				collisionTimer = 0;
+				sprite.color = Color.green;
 			}
 		}
 
@@ -61,13 +74,14 @@ public class TargetCollisionScript : MonoBehaviour {
 				collidingMusic.Play ();
 				collidingMusic.loop = true;
 			}
-			Debug.Log ("Colliding with the target!" + successPercentage);
+//			Debug.Log ("Colliding with the target!" + successPercentage);
 		}
 		if (collider.gameObject.name == "Player" && (collisionTimer >= collisionTimeLimit)) {
 			collidingMusic.Stop ();
 			successMusic.Play ();
 			MoveThisTarget ();
-			Debug.Log ("Timer met!");
+			collisionTimer = 0;
+//			Debug.Log ("Timer met!");
 			overlappingWithPlayer = false;
 		}
 	}
@@ -80,9 +94,9 @@ public class TargetCollisionScript : MonoBehaviour {
 
 	void MoveThisTarget(){
 		float tempX = Random.Range (-14f, 14f);
-		float tempy = Random.Range (-14f, 14f);
-		new Vector3 tempPos = (tempX, tempy, 0f);
-		transform.position = tempPos;
+		float tempY = Random.Range (1f, 9f);
+		Vector3 newPos = new Vector3 (tempX, tempY, 0);
+		transform.position = newPos;
 	}
 
 	void CheckIfCollidingWithPlayer(){
@@ -92,8 +106,5 @@ public class TargetCollisionScript : MonoBehaviour {
 		//If you stop colliding with the player, reset and stop the timer
 		//If you collide for three seconds, play a sound, reset the timer and alpha, and reposition this
 	}
-
-	void RepositionMe(){
-		//TODO: Move this to a random spot in the box that's not colliding with the player
-	}
+		
 }
