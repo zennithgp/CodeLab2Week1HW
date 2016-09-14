@@ -9,8 +9,8 @@ public class TargetCollisionScript : MonoBehaviour {
 	public GameObject player;
 	public AudioSource collidingMusic;
 	public AudioSource successMusic;
-	SpriteRenderer spriteRenderer;
-	Sprite thisSprite;
+	SpriteRenderer sprite;
+	Color originalColor;
 
 	//create a timer to check how long this is colliding with the player
 	float collisionTimer = 0f;
@@ -25,6 +25,8 @@ public class TargetCollisionScript : MonoBehaviour {
 		player = GameObject.Find ("Player");
 		collidingMusic = GetComponent<AudioSource> ();
 		successMusic = player.GetComponent<AudioSource> ();
+		sprite = GetComponent<SpriteRenderer> ();
+		originalColor = sprite.color;
 
 
 	}
@@ -33,6 +35,9 @@ public class TargetCollisionScript : MonoBehaviour {
 	void Update () {
 
 		successPercentage = (collisionTimer / collisionTimeLimit);
+		Color newColor = sprite.color;
+		newColor.r = successPercentage;
+		sprite.color = newColor;
 
 	}
 
@@ -45,6 +50,7 @@ public class TargetCollisionScript : MonoBehaviour {
 				collidingMusic.Play ();
 				collidingMusic.loop = true;
 			}
+			Debug.Log ("Colliding with the target!" + successPercentage);
 		}
 		if (collider.gameObject.name == "Player" && (collisionTimer >= collisionTimeLimit)) {
 			collidingMusic.Stop ();
